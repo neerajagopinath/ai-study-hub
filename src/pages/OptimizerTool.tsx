@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, FileText, Clock, Zap, Target, TrendingUp, Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 const stats = [
   { icon: FileText, label: "Files Studied", value: "12", color: "text-primary" },
@@ -40,7 +42,12 @@ const suggestions = [
 ];
 
 const OptimizerTool = () => {
+  const { trackToolUsage } = useToolUsage();
   const maxHours = Math.max(...weeklyData.map((d) => d.hours));
+
+  useEffect(() => {
+    trackToolUsage("/tools/optimizer");
+  }, [trackToolUsage]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

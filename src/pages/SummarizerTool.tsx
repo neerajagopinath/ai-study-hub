@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, FileText, CheckCircle2, AlertCircle, Circle } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 interface UnitProgress {
   name: string;
@@ -15,10 +16,15 @@ interface UnitProgress {
 }
 
 const SummarizerTool = () => {
+  const { trackToolUsage } = useToolUsage();
   const [syllabusFile, setSyllabusFile] = useState<File | null>(null);
   const [notesFile, setNotesFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [units, setUnits] = useState<UnitProgress[]>([]);
+
+  useEffect(() => {
+    trackToolUsage("/tools/summarizer");
+  }, [trackToolUsage]);
 
   const handleAnalyze = async () => {
     if (!syllabusFile || !notesFile) return;

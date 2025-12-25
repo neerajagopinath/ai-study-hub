@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ToolLayout } from "@/components/tool/ToolLayout";
 import { UploadPanel } from "@/components/tool/UploadPanel";
 import { OptionsPanel, ToolOption } from "@/components/tool/OptionsPanel";
 import { OutputPanel, OutputTab } from "@/components/tool/OutputPanel";
+import { AIQualityControls, QualitySettings } from "@/components/tool/AIQualityControls";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 const options: ToolOption[] = [
   {
@@ -42,6 +44,7 @@ const options: ToolOption[] = [
 ];
 
 const SpeakerNotesTool = () => {
+  const { trackToolUsage } = useToolUsage();
   const [file, setFile] = useState<File | null>(null);
   const [optionValues, setOptionValues] = useState<Record<string, string | boolean>>({
     mode: "seminar",
@@ -49,12 +52,21 @@ const SpeakerNotesTool = () => {
     includeViva: true,
     timingGuide: false,
   });
+  const [qualitySettings, setQualitySettings] = useState<QualitySettings>({
+    outputLength: "medium",
+    tone: "exam",
+    bulletPoints: true,
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [outputs, setOutputs] = useState<OutputTab[]>([
     { id: "notes", label: "Speaker Notes", content: "" },
     { id: "viva", label: "Viva Questions", content: "" },
     { id: "tips", label: "Presentation Tips", content: "" },
   ]);
+
+  useEffect(() => {
+    trackToolUsage("/tools/speaker-notes");
+  }, [trackToolUsage]);
 
   const handleOptionChange = (id: string, value: string | boolean) => {
     setOptionValues((prev) => ({ ...prev, [id]: value }));
@@ -208,12 +220,18 @@ BODY LANGUAGE
           onFileSelect={setFile}
         />
 
-        <OptionsPanel
-          title="Customize Output"
-          options={options}
-          values={optionValues}
-          onChange={handleOptionChange}
-        />
+        <div className="flex flex-col gap-4">
+          <OptionsPanel
+            title="Customize Output"
+            options={options}
+            values={optionValues}
+            onChange={handleOptionChange}
+          />
+          <AIQualityControls
+            settings={qualitySettings}
+            onChange={setQualitySettings}
+          />
+        </div>
 
         <OutputPanel
           tabs={outputs}
