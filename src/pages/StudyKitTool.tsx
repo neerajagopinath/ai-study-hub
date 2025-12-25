@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ToolLayout } from "@/components/tool/ToolLayout";
 import { UploadPanel } from "@/components/tool/UploadPanel";
 import { OptionsPanel, ToolOption } from "@/components/tool/OptionsPanel";
 import { OutputPanel, OutputTab } from "@/components/tool/OutputPanel";
+import { AIQualityControls, QualitySettings } from "@/components/tool/AIQualityControls";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 const options: ToolOption[] = [
   {
@@ -48,6 +50,7 @@ const options: ToolOption[] = [
 ];
 
 const StudyKitTool = () => {
+  const { trackToolUsage } = useToolUsage();
   const [file, setFile] = useState<File | null>(null);
   const [optionValues, setOptionValues] = useState<Record<string, string | boolean>>({
     examType: "semester",
@@ -56,6 +59,11 @@ const StudyKitTool = () => {
     includeQuestions: true,
     revisionSheet: false,
   });
+  const [qualitySettings, setQualitySettings] = useState<QualitySettings>({
+    outputLength: "medium",
+    tone: "exam",
+    bulletPoints: true,
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [outputs, setOutputs] = useState<OutputTab[]>([
     { id: "concepts", label: "Key Concepts", content: "" },
@@ -63,6 +71,11 @@ const StudyKitTool = () => {
     { id: "questions", label: "Important Questions", content: "" },
     { id: "revision", label: "Revision Sheet", content: "" },
   ]);
+
+  // Track tool usage on mount
+  useEffect(() => {
+    trackToolUsage("/tools/study-kit");
+  }, [trackToolUsage]);
 
   const handleOptionChange = (id: string, value: string | boolean) => {
     setOptionValues((prev) => ({ ...prev, [id]: value }));
@@ -197,12 +210,18 @@ Topic A → Topic B → Topic C
           onFileSelect={setFile}
         />
 
-        <OptionsPanel
-          title="Customize Output"
-          options={options}
-          values={optionValues}
-          onChange={handleOptionChange}
-        />
+        <div className="flex flex-col gap-4">
+          <OptionsPanel
+            title="Customize Output"
+            options={options}
+            values={optionValues}
+            onChange={handleOptionChange}
+          />
+          <AIQualityControls
+            settings={qualitySettings}
+            onChange={setQualitySettings}
+          />
+        </div>
 
         <OutputPanel
           tabs={outputs}

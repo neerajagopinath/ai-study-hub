@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, FileText, Plus, X, TrendingUp, Star, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 interface Topic {
   name: string;
@@ -13,9 +14,14 @@ interface Topic {
 }
 
 const PredictiveTool = () => {
+  const { trackToolUsage } = useToolUsage();
   const [files, setFiles] = useState<File[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [topics, setTopics] = useState<Topic[]>([]);
+
+  useEffect(() => {
+    trackToolUsage("/tools/predictive");
+  }, [trackToolUsage]);
 
   const handleFileAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);

@@ -1,13 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Upload, File, X, FileText, Presentation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useActiveFile } from "@/contexts/FileContext";
 
 interface UploadPanelProps {
   acceptedTypes?: string[];
   onFileSelect?: (file: File | null) => void;
   title?: string;
   description?: string;
+  useGlobalFile?: boolean;
 }
 
 export function UploadPanel({
@@ -15,9 +17,21 @@ export function UploadPanel({
   onFileSelect,
   title = "Upload Your File",
   description,
+  useGlobalFile = true,
 }: UploadPanelProps) {
-  const [file, setFile] = useState<File | null>(null);
+  const { activeFile, setActiveFile } = useActiveFile();
+  const [localFile, setLocalFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Use global file if enabled and available
+  const file = useGlobalFile ? (localFile || activeFile) : localFile;
+
+  // Sync with global file on mount
+  useEffect(() => {
+    if (useGlobalFile && activeFile && !localFile) {
+      onFileSelect?.(activeFile);
+    }
+  }, [activeFile, useGlobalFile, localFile, onFileSelect]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -35,26 +49,32 @@ export function UploadPanel({
       setIsDragging(false);
       const droppedFile = e.dataTransfer.files[0];
       if (droppedFile) {
-        setFile(droppedFile);
+        setLocalFile(droppedFile);
+        if (useGlobalFile) {
+          setActiveFile(droppedFile);
+        }
         onFileSelect?.(droppedFile);
       }
     },
-    [onFileSelect]
+    [onFileSelect, useGlobalFile, setActiveFile]
   );
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0];
       if (selectedFile) {
-        setFile(selectedFile);
+        setLocalFile(selectedFile);
+        if (useGlobalFile) {
+          setActiveFile(selectedFile);
+        }
         onFileSelect?.(selectedFile);
       }
     },
-    [onFileSelect]
+    [onFileSelect, useGlobalFile, setActiveFile]
   );
 
   const handleRemove = useCallback(() => {
-    setFile(null);
+    setLocalFile(null);
     onFileSelect?.(null);
   }, [onFileSelect]);
 

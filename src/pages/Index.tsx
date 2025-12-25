@@ -9,6 +9,8 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FeatureCard } from "@/components/dashboard/FeatureCard";
+import { ToolRecommendation } from "@/components/dashboard/ToolRecommendation";
+import { ActiveFileChip } from "@/components/dashboard/ActiveFileChip";
 
 const features = [
   {
@@ -101,10 +103,30 @@ const Index = () => {
         {/* Features Section */}
         <section className="py-12 md:py-16">
           <div className="container">
+            {/* Active File Chip */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+              className="mb-6 flex justify-center"
+            >
+              <ActiveFileChip />
+            </motion.div>
+
+            {/* Smart Recommendation */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
+              className="mb-8"
+            >
+              <ToolRecommendation />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.35 }}
               className="text-center mb-10"
             >
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
