@@ -23,70 +23,6 @@ import { FeatureCard } from "@/components/dashboard/FeatureCard";
 /*                                   DATA                                     */
 /* -------------------------------------------------------------------------- */
 
-const features = [
-  {
-    icon: FileText,
-    title: "Smart Study Kit Generator",
-    description:
-      "Turn PDFs into structured notes, definitions, and revision sheets. AI parses every page, highlights key concepts, and builds flashcards that stick.",
-    path: "/tools/study-kit",
-    color: "blue" as const,
-    demoGif: "/demos/study-kit.gif", // Add demo visuals
-  },
-  {
-    icon: Presentation,
-    title: "Speaker Notes & Viva Prep",
-    description:
-      "Convert slides into speaker notes with likely viva questions. Practice responses with AI feedback loops for confidence.",
-    path: "/tools/speaker-notes",
-    color: "amber" as const,
-    demoGif: "/demos/speaker-notes.gif",
-  },
-  {
-    icon: BookOpen,
-    title: "Syllabus-Aware Summarizer",
-    description:
-      "Map your notes to the syllabus and uncover missing topics. Gap analysis with prioritized study paths to fill voids fast.",
-    path: "/tools/summarizer",
-    color: "green" as const,
-    demoGif: "/demos/summarizer.gif",
-  },
-  {
-    icon: FileQuestion,
-    title: "Predictive Study Assistant",
-    description:
-      "Analyze past papers and predict high-importance questions. Weighted by trends, difficulty, and syllabus weightage.",
-    path: "/tools/predictive",
-    color: "purple" as const,
-    demoGif: "/demos/predictive.gif",
-  },
-  {
-    icon: TrendingUp,
-    title: "Study Workflow Optimizer",
-    description:
-      "Track sessions, optimize effort, and study with clarity. Pomodoro integration, progress heatmaps, and burnout alerts.",
-    path: "/tools/optimizer",
-    color: "rose" as const,
-    demoGif: "/demos/optimizer.gif",
-  },
-  // Added more features for expansion
-  {
-    icon: Zap,
-    title: "Flashcard Forge",
-    description: "Generate adaptive flashcards with spaced repetition algorithms. Quiz yourself endlessly for retention mastery.",
-    path: "/tools/flashcards",
-    color: "purple" as const,
-    demoGif: "/demos/flashcards.gif",
-  },
-  {
-    icon: Lightbulb,
-    title: "Mindmap Maestro",
-    description: "Auto-generate visual mindmaps from your notes. Connect ideas interactively for deeper understanding.",
-    path: "/tools/mindmap",
-    color: "blue" as const,
-    demoGif: "/demos/mindmap.gif",
-  },
-];
 
 const painLines = [
   "Too many PDFs piling up like digital hoarding.",
@@ -344,12 +280,12 @@ const Index = () => {
   const particlesOpacity = useSpring(useTransform(scrollYProgress, [0, 0.5], [1, 0.3])); // Fade particles on scroll
 
   // Auto-advance feature highlight for engagement
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentFeature((prev) => (prev + 1) % features.length);
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, []);
   
 
   return (
@@ -524,46 +460,40 @@ const Index = () => {
           </div>
         </section>
 
-        {/* ------------------------------------------------------------------ */}
-        {/*                          TOOLS REVEAL                               */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="py-16 scroll-mt-24 relative">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Choose Your Tool
-              </h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">
-                You’ve seen what’s possible. Now start studying smarter. 
-                <br /> <span className="text-primary">Pro tip: Try the demo on hover!</span>
-              </p>
-            </motion.div>
+{/* ------------------------------------------------------------------ */}
+{/*                          TOOLS REVEAL                               */}
+{/* ------------------------------------------------------------------ */}
+<section className="py-20 relative">
+  <div className="container">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-center max-w-2xl mx-auto"
+    >
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        Choose Your Tool
+      </h2>
 
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={{
-                hidden: {},
-                visible: { transition: { staggerChildren: 0.15 } },
-              }}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" // Reduced gap
-            >
-              {features.map((feature, index) => (
-                <FeatureCard
-                  key={feature.path}
-                  {...feature}
-                  index={index}
-                />
-              ))}
-            </motion.div>
-          </div>
-        </section>
+      <p className="text-muted-foreground mb-8">
+        You’ve seen what’s possible.  
+        Now explore the full AI-powered toolkit built to transform how you study.
+      </p>
+
+      <motion.a
+        href="/tools"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-shadow"
+      >
+        Discover Tools
+        <span className="inline-block translate-x-0 group-hover:translate-x-1 transition-transform">
+          →
+        </span>
+      </motion.a>
+    </motion.div>
+  </div>
+</section>
 
         {/* ------------------------------------------------------------------ */}
         {/*                          FAQ ACCORDION (ENGAGEMENT)                 */}
@@ -603,7 +533,7 @@ const Index = () => {
 
       <Footer />
 
-      {/* Demo Modal for Retention */}
+      {/* Demo Modal for Retention
       <AnimatePresence>
         {showDemoModal && (
           <motion.div
@@ -637,7 +567,7 @@ const Index = () => {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
     </div>
   );
 };

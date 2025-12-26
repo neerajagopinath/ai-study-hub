@@ -221,13 +221,6 @@ const About = () => {
                 <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                   Revolutionizing how college students conquer their semesters. From chaos to clarity, one AI-powered tool at a time. Dive in and see the magic.
                 </p>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-8 inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl"
-                >
-                  Explore Tools <ChevronRight className="h-5 w-5" />
-                </motion.button>
               </motion.div>
             </div>
           </motion.div>
