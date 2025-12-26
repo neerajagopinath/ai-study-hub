@@ -1,5 +1,6 @@
-import { BookOpen, User } from "lucide-react";
+import { BookOpen, User, Moon, Sun } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -10,6 +11,11 @@ const navLinks = [
 
 export function Navbar() {
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -45,9 +51,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        <button className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground">
-          <User className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground"
+            aria-label="Toggle theme"
+          >
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </button>
+          <button className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground">
+            <User className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </header>
   );
