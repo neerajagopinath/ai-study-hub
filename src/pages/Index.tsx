@@ -11,6 +11,7 @@ import { Footer } from "@/components/layout/Footer";
 import { FeatureCard } from "@/components/dashboard/FeatureCard";
 import { ToolRecommendation } from "@/components/dashboard/ToolRecommendation";
 import { ActiveFileChip } from "@/components/dashboard/ActiveFileChip";
+import { StudyInsights } from "@/components/dashboard/StudyInsights";
 
 const features = [
   {
@@ -122,6 +123,9 @@ const Index = () => {
             >
               <ToolRecommendation />
             </motion.div>
+
+            {/* Study Insights */}
+            <StudyInsights />
 
             <motion.div
               initial={{ opacity: 0 }}
