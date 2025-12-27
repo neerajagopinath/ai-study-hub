@@ -279,15 +279,6 @@ const Index = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const particlesOpacity = useSpring(useTransform(scrollYProgress, [0, 0.5], [1, 0.3])); // Fade particles on scroll
 
-  // Auto-advance feature highlight for engagement
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setCurrentFeature((prev) => (prev + 1) % features.length);
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // }, []);
-  
-
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden relative">
       <FloatingParticles opacity={Number(particlesOpacity)} />
@@ -353,35 +344,45 @@ const Index = () => {
             </motion.div>
           </motion.div>
         </section>
+        
+       {/* ------------------------------------------------------------------ */}
+{/*                        PAIN IMMERSION (SUBTLE)                     */}
+{/* ------------------------------------------------------------------ */}
+<section className="py-32 relative overflow-hidden">
+  <div className="container max-w-4xl mx-auto space-y-24">
 
-        {/* ------------------------------------------------------------------ */}
-        {/*                          PAIN IMMERSION                             */}
-        {/* ------------------------------------------------------------------ */}
-        <section className="py-24 relative">
-          <div className="container max-w-3xl mx-auto">
-            {painLines.map((line, i) => (
-              <motion.p
-                key={line}
-                initial={{ opacity: 0, x: -60, scale: 0.9 }}
-                whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.3, duration: 0.8, ease: "easeOut" }}
-                className="text-4xl md:text-5xl font-semibold mb-8 text-center drop-shadow-lg"
-              >
-                {line} 😩
-              </motion.p>
-            ))}
+    {painLines.map((line, i) => {
+      const alignment =
+        i % 3 === 0
+          ? "text-left mr-auto"
+          : i % 3 === 1
+          ? "text-right ml-auto"
+          : "text-center mx-auto";
+
+      const xOffset =
+        i % 2 === 0 ? -40 : 40;
+
+      return (
+        <motion.div
+          key={line}
+          initial={{ opacity: 0, x: xOffset, y: 20 }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: true, margin: "-120px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className={`max-w-xl ${alignment}`}
+        >
+          <div className="inline-block bg-card/70 backdrop-blur-sm border border-border/50 rounded-2xl px-6 py-4 shadow-sm">
+            <p className="text-lg md:text-xl font-medium text-foreground/90">
+              {line}
+            </p>
           </div>
-          {/* Subtle call-to-action overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-center"
-          >
-            <p className="text-muted-foreground mb-2">Sound familiar?</p>
-            <ChevronRight className="h-6 w-6 mx-auto text-primary animate-bounce" />
-          </motion.div>
-        </section>
+        </motion.div>
+      );
+    })}
+
+  </div>
+</section>
+
 
         {/* ------------------------------------------------------------------ */}
 {/*            AI TRANSFORMATION (VERTICAL PARALLAX)                    */}
@@ -532,42 +533,6 @@ const Index = () => {
       </main>
 
       <Footer />
-
-      {/* Demo Modal for Retention
-      <AnimatePresence>
-        {showDemoModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-            onClick={() => setShowDemoModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-background rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className="text-2xl font-bold mb-4">Live Demo: {features[currentFeature]?.title}</h3>
-              <img src={features[currentFeature]?.demoGif} alt="Demo" className="w-full rounded-lg mb-4" />
-              <p className="text-muted-foreground mb-6">See the magic in action. Upload your first file now?</p>
-              <div className="flex gap-4 justify-end">
-                <button
-                  onClick={() => setShowDemoModal(false)}
-                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
-                >
-                  Close
-                </button>
-                <a href={features[currentFeature]?.path} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2 rounded-full font-semibold">
-                  Try Now <Sparkles className="h-4 w-4" />
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence> */}
     </div>
   );
 };

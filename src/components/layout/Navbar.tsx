@@ -18,14 +18,26 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className="
+        fixed top-0 left-0 right-0 z-50
+        w-full border-b border-border/40
+        bg-background/80 backdrop-blur-xl
+        supports-[backdrop-filter]:bg-background/60
+      "
+    >
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform duration-200 group-hover:scale-105">
+
+        {/* ------------------------------------------------------------------ */}
+        {/*                               BRAND                                 */}
+        {/* ------------------------------------------------------------------ */}
+        <Link to="/" className="flex items-center gap-3 group select-none">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm transition-transform duration-200 group-hover:scale-105">
             <BookOpen className="h-5 w-5" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-semibold tracking-tight text-foreground">
+
+          <div className="leading-tight">
+            <span className="block text-base font-semibold tracking-tight text-foreground">
               AI Study Companion
             </span>
             <span className="hidden text-xs text-muted-foreground sm:block">
@@ -34,33 +46,65 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                "px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-                location.pathname === link.path
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+        {/* ------------------------------------------------------------------ */}
+        {/*                           NAV LINKS                                 */}
+        {/* ------------------------------------------------------------------ */}
+        <nav className="relative hidden md:flex items-center gap-1">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+                  isActive
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {link.name}
+
+                {/* Active underline */}
+                {isActive && (
+                  <span className="absolute inset-x-2 -bottom-1 h-0.5 rounded-full bg-primary" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
+        {/* ------------------------------------------------------------------ */}
+        {/*                         ACTION BUTTONS                              */}
+        {/* ------------------------------------------------------------------ */}
         <div className="flex items-center gap-2">
+
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground"
             aria-label="Toggle theme"
+            className="
+              relative flex h-9 w-9 items-center justify-center
+              rounded-full bg-secondary/70 text-muted-foreground
+              transition-all hover:bg-secondary hover:text-foreground
+              focus:outline-none focus:ring-2 focus:ring-primary/40
+            "
           >
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground">
+
+          {/* User Button (future dropdown ready) */}
+          <button
+            aria-label="User menu"
+            className="
+              flex h-9 w-9 items-center justify-center
+              rounded-full bg-secondary/70 text-muted-foreground
+              transition-all hover:bg-secondary hover:text-foreground
+              focus:outline-none focus:ring-2 focus:ring-primary/40
+            "
+          >
             <User className="h-5 w-5" />
           </button>
         </div>
