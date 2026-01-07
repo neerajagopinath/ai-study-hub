@@ -1,14 +1,28 @@
 import fs from "fs"
-import { createRequire } from "module"
-
-const require = createRequire(import.meta.url)
-const pdf = require("pdf-parse")
+import { PDFParse } from "pdf-parse"
+import { extractPdfTextWithOCR } from "./pdfOcrExtractor.js"
 
 export async function extractPdfText(filePath: string): Promise<string> {
   const buffer = fs.readFileSync(filePath)
-  const data = await pdf(buffer)
+  const parser = new PDFParse({ data: buffer })
+  
+  try {
+    const textResult = await parser.getText()
+    return textResult.text
+      .replace(/\s+/g, " ")
+      .trim()
+  } finally {
+    await parser.destroy()
+  }
+}
 
-  return data.text
-    .replace(/\s+/g, " ")
-    .trim()
+export async function extractBestPdfText(filePath: string) {
+  const text = await extractPdfText(filePath)
+
+  if (text.length > 300) {
+    return { text, method: "text-layer" }
+  }
+
+  const ocrText = await extractPdfTextWithOCR(filePath)
+  return { text: ocrText, method: "ocr" }
 }
