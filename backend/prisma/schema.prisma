@@ -13,6 +13,8 @@ model User {
   password  String?
   googleId  String?
   createdAt DateTime @default(now())
+  studyKits StudyKit[]
+  speakerNotes SpeakerNotes[]
 }
 
 model Document {
@@ -21,4 +23,54 @@ model Document {
   mimeType   String
   path       String
   uploadedAt DateTime @default(now())
+  studyKits StudyKit[]
+  speakerNotes SpeakerNotes[]
+}
+
+model StudyKit {
+  id          String   @id @default(uuid())
+  userId      String
+  documentId  String
+
+  // Core AI output
+  summary     String
+  keyTopics   Json
+  flashcards  Json
+  definitions Json
+
+  // Metadata
+  subject     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  document Document @relation(fields: [documentId], references: [id])
+
+  @@unique([userId, documentId])
+}
+
+model SpeakerNotes {
+  id          String   @id @default(uuid())
+  userId      String
+  documentId  String
+
+  // Core AI output
+  notes       Json
+  vivaQs      Json
+  tips        Json
+
+  // Options user selected
+  mode        String?
+  style       String?
+  duration    Int?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  document Document @relation(fields: [documentId], references: [id])
+
+  @@unique([userId, documentId])
 }
