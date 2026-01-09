@@ -1,21 +1,62 @@
-import { StudyKitSchema } from "../schemas/studyKit.schema.js"
-import { generateStudyKit } from "../ai/llm.client.js"
+import prisma from "../prisma.js";
+import { runStudyKitPipeline } from "../ai/pipeline/studyKit.pipeline.js";
 
-export async function buildStudyKitFromText(text: string) {
-  const raw = await generateStudyKit(text)
+export async function generateStudyKitService(input: {
+  userId: string;
+  documentId: string;
+  documentText: string;
+  subject?: string;
+}) {
+  // 1️⃣ Check if study kit already exists (cache)
+  const existing = await prisma.studyKit.findUnique({
+    where: {
+      userId_documentId: {
+        userId: input.userId,
+        documentId: input.documentId,
+      },
+    },
+  });
 
-  if (!raw) {
-    throw new Error("LLM returned no content")
+  if (existing) {
+    return {
+      source: "cache",
+      data: existing,
+    };
   }
 
-  let parsed
-  try {
-    parsed = JSON.parse(raw)
-  } catch {
-    throw new Error("LLM returned invalid JSON")
-  }
+  // 2️⃣ Run AI pipeline
+  const aiResult = await runStudyKitPipeline({
+    documentText: input.documentText,
+    subject: input.subject,
+  });
 
-  const validated = StudyKitSchema.parse(parsed)
+  // 2.5️⃣ Ensure Document exists (FK safety)
+  await prisma.document.upsert({
+    where: { id: input.documentId },
+    update: {},
+    create: {
+      id: input.documentId,
+      filename: "generated-input",
+      mimeType: "text/plain",
+      path: "virtual",
+    },
+  });
 
-  return validated
+  // 3️⃣ Persist StudyKit
+  const saved = await prisma.studyKit.create({
+    data: {
+      userId: input.userId,
+      documentId: input.documentId,
+      subject: input.subject,
+      summary: aiResult.summary,
+      keyTopics: aiResult.keyTopics,
+      flashcards: aiResult.flashcards,
+      definitions: aiResult.definitions,
+    },
+  });
+
+  return {
+    source: "generated",
+    data: saved,
+  };
 }

@@ -1,48 +1,43 @@
-import { Router } from "express"
-import { extractPdfText } from "../utils/pdfExtractor.js"
-import { buildStudyKitFromText } from "../services/studyKit.service.js"
-import prisma from "../prisma.js"
+import { Router } from "express";
+import { generateStudyKitService } from "../services/studyKit.service.js";
+import { generateSpeakerNotesService } from "../services/speakerNotes.service.js";
 
-const router = Router()
+const router = Router();
+
+router.post("/speaker-notes", async (req, res) => {
+  const { documentId, documentText, options } = req.body;
+
+  if (!documentId || !documentText) {
+    return res.status(400).json({ error: "documentId and documentText required" });
+  }
+
+  const result = await generateSpeakerNotesService({
+    // userId: req.user.id,
+    userId: "test-user-id",
+    documentId,
+    documentText,
+    options,
+  });
+
+  res.json(result);
+});
 
 router.post("/study-kit", async (req, res) => {
-  try {
-    const { documentId } = req.body
+  const { documentId, documentText, subject } = req.body;
 
-    if (!documentId) {
-      return res.status(400).json({ error: "documentId required" })
-    }
-
-    const document = await prisma.document.findUnique({
-      where: { id: documentId }
-    })
-
-    if (!document || document.mimeType !== "application/pdf") {
-      return res.status(400).json({ error: "Invalid document" })
-    }
-
-    // ✅ Extract text
-    const text = await extractPdfText(document.path)
-
-    if (!text || text.length < 100) {
-      return res.status(400).json({
-        error: "PDF text extraction failed or too short",
-        preview: text
-      })
-    }
-
-    // ✅ Build study kit
-    const studyKit = await buildStudyKitFromText(text)
-
-    res.json({
-      tool: "study_kit_generator",
-      documentId,
-      studyKit
-    })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: "Study kit generation failed" })
+  if (!documentId || !documentText) {
+    return res.status(400).json({ error: "documentId and documentText required" });
   }
-})
 
-export default router
+  const result = await generateStudyKitService({
+    // userId: req.user.id,
+    userId: "test-user-id",
+    documentId,
+    documentText,
+    subject,
+  });
+
+  res.json(result);
+});
+
+export default router;
