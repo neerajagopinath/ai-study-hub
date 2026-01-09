@@ -20,6 +20,8 @@ import {
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import Haresh from "../../public/haresh.jpeg";
+
 
 const values = [
   {
@@ -50,14 +52,14 @@ const team = [
     role: "Founder & Visionary",
     bio: "A passionate educator and entrepreneur, Neeraja founded AI Study Companion to bridge the gap between technology and effective learning. With a background in cognitive science, she ensures every tool empowers students to thrive.",
     avatar: "/avatars/neeraja.jpg", // Placeholder
-    social: "@neeraja_gopinath",
+    social: "neeraja-gopinath-111565328",
   },
   {
     name: "HARESH SAINAATH S",
     role: "Tech Lead & Innovator",
     bio: "Haresh is the technical wizard behind the seamless AI integrations. A full-stack developer with expertise in machine learning, he crafts features that feel intuitive and powerful, turning complex algorithms into effortless study aids.",
-    avatar: "/avatars/haresh.jpg", // Placeholder
-    social: "@haresh_sainaath",
+    avatar: Haresh, // Placeholder
+    social: "haresh-sainaath-159061326",
   },
 ];
 
@@ -335,10 +337,10 @@ const About = () => {
                     </p>
                     <div className="flex justify-center">
                       <a
-                        href={`https://x.com/${member.social}`}
+                        href={`https://www.linkedin.com/in/${member.social}`}
                         className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
                       >
-                        Follow on X <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        Follow on LinkedIn <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </a>
                     </div>
                   </div>
