@@ -9,6 +9,9 @@ import Index from "./pages/Index";
 import Tools from "./pages/Tools";
 import About from "./pages/About";
 import StudyKitTool from "./pages/StudyKitTool";
+import StudyKitDirect from "./pages/StudyKitDirect";
+import DocumentParserTool from "./pages/DocumentParserTool";
+import ManualTextToolPage from "./pages/ManualTextToolPage";
 import SpeakerNotesTool from "./pages/SpeakerNotesTool";
 import SummarizerTool from "./pages/SummarizerTool";
 import PredictiveTool from "./pages/PredictiveTool";
@@ -30,6 +33,9 @@ const App = () => (
               <Route path="/tools" element={<Tools />} />
               <Route path="/about" element={<About />} />
               <Route path="/tools/study-kit" element={<StudyKitTool />} />
+              <Route path="/tools/study-kit-direct" element={<StudyKitDirect />} />
+              <Route path="/tools/document-parser" element={<DocumentParserTool />} />
+              <Route path="/tools/manual-text" element={<ManualTextToolPage />} />
               <Route path="/tools/speaker-notes" element={<SpeakerNotesTool />} />
               <Route path="/tools/summarizer" element={<SummarizerTool />} />
               <Route path="/tools/predictive" element={<PredictiveTool />} />

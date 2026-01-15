@@ -8,6 +8,8 @@ import {
   TrendingUp,
   Play,
   Sparkles,
+  Upload,
+  Edit,
 } from "lucide-react";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -62,6 +64,24 @@ const tools = [
       "Track sessions, avoid burnout, and improve efficiency with AI-powered insights.",
     path: "/tools/optimizer",
     demoGif: "/demos/optimizer.gif",
+  },
+  {
+    id: 5,
+    icon: Upload,
+    title: "Document Text Extractor",
+    description:
+      "Extract and verify text from PDFs, PPTX, and DOCX files before generating study kits. No API waste!",
+    path: "/tools/document-parser",
+    demoGif: "/demos/study-kit.gif",
+  },
+  {
+    id: 6,
+    icon: Edit,
+    title: "Manual Text Input",
+    description:
+      "Bypass PDF parsing issues! Copy, paste, or type your study material directly into the study kit generator.",
+    path: "/tools/manual-text",
+    demoGif: "/demos/study-kit.gif",
   },
 ];
 
