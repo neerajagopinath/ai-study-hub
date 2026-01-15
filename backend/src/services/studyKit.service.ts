@@ -50,8 +50,8 @@ export async function generateStudyKitService(input: {
       subject: input.subject,
       summary: aiResult.summary,
       keyTopics: aiResult.keyTopics,
-      flashcards: aiResult.flashcards,
-      definitions: aiResult.definitions,
+      flashcards: JSON.parse(JSON.stringify(aiResult.flashcards)),
+      definitions: JSON.parse(JSON.stringify(aiResult.definitions)),
     },
   });
 
